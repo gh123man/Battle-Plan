@@ -3,6 +3,7 @@
 include_once "./pageElements/headder.php";
 ?>
 <LINK href="/static/css/pageContent.css" rel="stylesheet" type="text/css">
+<LINK href="/static/css/project.css" rel="stylesheet" type="text/css">
 <body>
 <div class="pageContent">
 
@@ -23,7 +24,50 @@ if (isset($_GET['ID']) && Project::projectExistsId($_GET['ID'])) {
 }
 ?>
 
-<h2><?php echo $project->getName();?></h2>
+
+<div class="projectTitle">
+    <span>
+        <?php echo $project->getName();?>
+    </span>
+</div>
+
+<div class="left">
+
+    <div class="projectOverview panelBody">
+        <div class="titleBar barHead">
+            <div  class="panelTitle">
+                <span>
+                    <a href="/">Tasks</a>
+                </span>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+<div class="right">
+    <div class="projectIssues panelBody">
+        <div class="titleBar barHead">
+            <div  class="panelTitle">
+                <span>
+                    <a href="/">Issues</a>
+                </span>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="projectMembers panelBody">
+        <div class="titleBar barHead">
+            <div  class="panelTitle">
+                <span>
+                    <a href="/">Members</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 

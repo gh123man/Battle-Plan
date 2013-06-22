@@ -17,7 +17,7 @@ connect();
 <script type="text/javascript" src="/static/textfill/jquery.textfill.min.js"></script>
 <script type="text/javascript" src="/static/js/topBar.js"></script>
 
-<div class="topBar">
+<div class="topBar barHead">
 <div class="topBarContent">
 
     

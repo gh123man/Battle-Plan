@@ -1,10 +1,12 @@
 <?php
+include_once "./utils/sql_util.php";
+include_once "./objects/Account.php";
 session_start();
 if (!$_SESSION['loggedin']) {
     header('Location: /');
     return;
 }
-
+connect();
 ?>
 
 <html>

@@ -34,6 +34,7 @@ class Project {
     public function __construct($ID, $owner = null, $name = null, $description = null, $deadline = null, $time = null) {
         $this->ID = $ID;
         $this->owner = $owner;              $this->c_owner = false;
+        $this->name = $name;                $this->c_name = false;
         $this->description = $description;  $this->c_description = false;
         $this->deadline = $deadline;        $this->c_deadline = false;
         $this->time = $time;                $this->c_time = false;
@@ -84,10 +85,11 @@ class Project {
         return $this->owner;
     }
     public function getName() {
+        
         if ($this->name == null) {
             $this->name = $this->dbSelect('name', Project::$tableName);
         }
-        return $this->hash;
+        return $this->name;
     }
     public function getdescription() {
         if ($this->description == null) {

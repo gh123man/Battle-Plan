@@ -8,10 +8,9 @@ include_once "./pageElements/headder.php";
 
 <?php
 include_once "./pageElements/projects.php";
-listMyProjects();
-echo "<br>";
-createProjectField();
 ?>
+
+
 
 
 

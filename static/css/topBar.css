@@ -3,9 +3,9 @@
  * Proprietary and confidential
  * Written by Brian Floersch <gh123man@gmail.com>
  */
-#topBar {
-    position: fixed;
-    z-index:52;
+.topBar {
+    position: absolute;
+    z-index:50;
     top: 0;
     left: 0;
     width: 100%;
@@ -13,18 +13,17 @@
     overflow: hidden;
     font-weight:bold;
     
-}
-.NavBarTemplate{
-    background: #303030; /* Old browsers */
-    background: -moz-linear-gradient(top,  #4c4c4c 0%, #303030 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#4c4c4c), color-stop(100%,#303030)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top,  #4c4c4c 0%,#303030 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top,  #4c4c4c 0%,#303030 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top,  #4c4c4c 0%,#303030 100%); /* IE10+ */
-    background: linear-gradient(to bottom,  #4c4c4c 0%,#303030 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4c4c', endColorstr='#303030',GradientType=0 ); /* IE6-9 */
+    background: #4c4c4c; /* Old browsers */
+    background: -moz-linear-gradient(top,  #4c4c4c 0%, #1f619b 2%, #0e1049 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#4c4c4c), color-stop(2%,#1f619b), color-stop(100%,#0e1049)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #4c4c4c 0%,#1f619b 2%,#0e1049 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #4c4c4c 0%,#1f619b 2%,#0e1049 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #4c4c4c 0%,#1f619b 2%,#0e1049 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #4c4c4c 0%,#1f619b 2%,#0e1049 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4c4c', endColorstr='#0e1049',GradientType=0 ); /* IE6-9 */
     box-shadow: 1px 1px 3px #000;
-
+    margin: auto;
+    
 }
 
 .searchCont {
@@ -33,8 +32,6 @@
     margin-top: -8px;
     padding-top: 13px;
     padding-right: 400px;
-    
-    
 }
 
 .searchArea {

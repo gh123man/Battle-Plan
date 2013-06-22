@@ -14,11 +14,10 @@ if (!isset($_SESSION['loggedin'])) {
     Account::checkCookie();
 }
 
-
 switch (isset($_SESSION['loggedin']) && $_SESSION['loggedin']) {
 
      case true: // IF LOGGED IN, DRAW REQUESTED PAGE;
-         include_once "./pageElements/home.php";
+         header('Location: /home.php');
          break;
      
      case false:

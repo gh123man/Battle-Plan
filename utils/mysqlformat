@@ -12,6 +12,18 @@ create table Accounts(
     PRIMARY KEY (ID)
 );
 
+create table Projects(
+    ID char(32) NOT NULL,
+    owner char(10) NOT NULL,
+    name varchar(80) NOT NULL,
+    description varchar(200) NOT NULL,
+    deadline char(10) NOT NULL,
+    time int unsigned NOT NULL,
+    
+    PRIMARY KEY (ID),
+    FOREIGN KEY (owner) REFERENCES Accounts(ID)
+);
+
 
 
     

@@ -245,6 +245,18 @@ class Account {
         }
     }
     
+    /**
+     * logs out account
+     */
+    public static function logOut() {
+        session_start();
+        connect();
+        $account = new Account($_SESSION['userid']);
+        $account->removeCookie();
+        session_destroy();
+        header('Location: /');
+    }
+    
     //=-=-=-=-=-=-=-=-=-=-=-=  Member Functions  =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-//
     
     /**

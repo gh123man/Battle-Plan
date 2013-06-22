@@ -13,7 +13,6 @@ include_once './utils/sql_util.php';
  */
 class Account {
     
-
     //=-=-=-=-=-=-=-=-=-=-=-=  Member variables  =-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     
     public static $tableName = "Accounts"; //name of table in database
@@ -30,6 +29,8 @@ class Account {
     private $salt;          private $c_salt;
     private $time;          private $c_time;
     
+    private $loginStatus;
+    
     
     //=-=-=-=-=-=-=-=-=-=-=-=  Constructors  -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     
@@ -39,6 +40,8 @@ class Account {
         $this->lname = $lname;          $this->c_lname = false;
         $this->time = $time;            $this->c_time = false;
         
+        $this->loginStatus = "";
+        
     }
     
 
@@ -47,7 +50,6 @@ class Account {
     public function __destruct() {
         $this->flush();
     }
-    
     
     //=-=-=-=-=-=-=-=-=-=-=-=  Setters  =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-//
     
@@ -78,6 +80,7 @@ class Account {
         $this->time = $time;
         $this->c_time = true;
     }
+    
 
 
     //=-=-=-=-=-=-=-=-=-=-=-=  Getters  =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-//
@@ -121,6 +124,9 @@ class Account {
         }
         return $this->time;
     }
+    public function getStatus() {
+        return $this->loginStatus;
+    }
     
     
     //=-=-=-=-=-=-=-=-=-=-=-=  SQL Access Functions  =-=-=-=-=-=-=-=-=-=-=-=-=-//
@@ -148,7 +154,7 @@ class Account {
      * inserts a new feed into the database
      */
     protected function insertAccount($ID, $email, $fname, $lname, $hash, $salt, $time) {
-        $query = $GLOBALS['currentConnection']->prepare('INSERT INTO ' . Account::$tableName . ' VALUES (:ID, :fname, :lname, :profile, :time)');
+        $query = $GLOBALS['currentConnection']->prepare('INSERT INTO ' . Account::$tableName . ' VALUES (:ID, :email, :fname, :lname, :hash, :salt, :time)');
         return ($query->execute(array(':ID' => $ID, ':email' => $email, ':fname' => $fname, ':lname' => $lname, ':hash' => $hash, ':salt' => $salt, ':time' => $time)));
     }
     
@@ -248,6 +254,15 @@ class Account {
         return Account::accountExistsId($this->ID);
     }
     
+    
+    /**
+     * generates password hash for account
+     */
+    protected function hash($password, $salt) {
+        return substr(crypt($password, '$6$rounds=5000$' . $salt . '$'), 15);
+    }
+    
+    
     /**
      * register new account and login
      */
@@ -260,7 +275,7 @@ class Account {
             //$password = md5($password);
             $bytes = openssl_random_pseudo_bytes(16, $cstrong);
             $salt = md5(sha1($bytes));
-            $hash = PersonAccount::hash($password, $salt);
+            $hash = Account::hash($password, $salt);
             
             $userid = Account::genID($email, $hash);
             
@@ -288,6 +303,7 @@ class Account {
         $hash = Account::hash($password, $account->getSalt());
                 
         if ($account->getHash() == $hash) {
+            $account->setStatus("true");
             
             $_SESSION['account'] = $account;
 		    $_SESSION['loggedin'] = true;

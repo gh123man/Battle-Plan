@@ -1,0 +1,44 @@
+/* Copyright (C) 2013 WebSystem Development Team - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Brian Floersch <gh123man@gmail.com>
+ */
+
+
+a {font-family:Arial; text-decoration:none; color:#0033aa;}
+a:link {}
+a:visited {}
+a:hover {text-decoration:underline;}
+a:active {}
+
+
+
+body { 
+
+    font-family:Arial;
+    font-size: 80%;
+} 
+
+html {
+    overflow-x: hidden;
+}
+
+#page {
+    position: relative;
+    width: 100%;
+    height: 1000%;
+}
+
+ul, li {
+    list-style-type: none;
+    margin: 0;
+    padding: 0; 
+}
+}
+a {
+    font-family:Arial;
+}
+
+a img {
+  border:none;
+}

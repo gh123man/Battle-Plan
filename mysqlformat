@@ -1,0 +1,20 @@
+create database battlePlan;
+
+create table Accounts(
+    ID char(10) NOT NULL,
+    email varchar(256) NOT NULL,
+    fname varchar(80) NOT NULL,
+    lname varchar(80) NOT NULL,
+    hash varchar(104) NOT NULL,
+    salt varchar(32) NOT NULL,
+    time int unsigned NOT NULL,
+    
+    PRIMARY KEY (ID)
+);
+
+
+
+    
+    
+    
+    

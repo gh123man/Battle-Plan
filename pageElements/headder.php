@@ -12,6 +12,7 @@ connect();
 <html>
 <LINK href="/static/css/global.css" rel="stylesheet" type="text/css">
 <LINK href="/static/css/topBar.css" rel="stylesheet" type="text/css">
+<LINK href="/static/jquery-ui/jquery-ui.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="/static/jquery/jquery.js"></script>
 <script type="text/javascript" src="/static/jquery-ui/jquery-ui.js"></script>
 <script type="text/javascript" src="/static/textfill/jquery.textfill.min.js"></script>

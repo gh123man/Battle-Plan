@@ -12,7 +12,7 @@ if (!$_SESSION['loggedin']) {
 }
 include_once "./objects/Project.php";
 
-if (isset($_POST['name']) && isset($_POST['description']) && isset($_POST['deadline'])) {
+if (isset($_POST['name'])  && strlen($_POST['name']) > 0  && isset($_POST['description'])  && strlen($_POST['description']) > 0  && isset($_POST['deadline'])) {
 
     $status = Project::createProject($_SESSION['account']->getID(), $_POST['name'], $_POST['description'], $_POST['deadline']);
 

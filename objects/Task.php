@@ -11,32 +11,38 @@ include_once './utils/sql_util.php';
  * This is an "as needed" database access object. all variables are automaticly
  * kept up to date in the database.
  */
-class Project {
+class Task {
     
     //=-=-=-=-=-=-=-=-=-=-=-=  Member variables  =-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     
-    public static $tableName = "Projects"; //name of table in database
+    public static $tableName = "Tasks"; //name of table in database
     public static $maxNameLen = 80;
-    public static $maxDescriptionLen = 500;
+    public static $maxDescriptionLen = 2000;
 
     
     //account data          //boolean data changed
     private $ID;
+    private $parent;        private $c_parent;
     private $owner;         private $c_owner;
+    private $project;       private $c_project;
     private $name;          private $c_name;
     private $description;   private $c_description;
     private $deadline;      private $c_deadline;
+    private $assigned;      private $c_assigned;
     private $time;          private $c_time;
     
     
     //=-=-=-=-=-=-=-=-=-=-=-=  Constructors  -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     
-    public function __construct($ID, $owner = null, $name = null, $description = null, $deadline = null, $time = null) {
+    public function __construct($ID, $parent = null, $owner = null, $project = null, $name = null, $description = null, $deadline = null, $assigned = null, $time = null) {
         $this->ID = $ID;
+        $this->parent = $parent;            $this->c_parent = false;
         $this->owner = $owner;              $this->c_owner = false;
+        $this->project = $project;          $this->c_project = false;
         $this->name = $name;                $this->c_name = false;
         $this->description = $description;  $this->c_description = false;
         $this->deadline = $deadline;        $this->c_deadline = false;
+        $this->assigned = $assigned;        $this->c_assigned = false;
         $this->time = $time;                $this->c_time = false;
         
     }
@@ -50,9 +56,17 @@ class Project {
     
     //=-=-=-=-=-=-=-=-=-=-=-=  Setters  =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-//
     
+    public function setParent($parent) {
+        $this->parent = $parent;
+        $this->c_parent = true;
+    }
     public function setOwner($owner) {
         $this->owner = $owner;
         $this->c_owner = true;
+    }
+    public function setProject($project) {
+        $this->project = $project;
+        $this->c_project = true;
     }
     public function setName($hash) {
         $this->name = $name;
@@ -66,6 +80,10 @@ class Project {
         $this->deadline = $deadline;
         $this->c_deadline = true;
     }
+    public function setAssigned($assigned) {
+        $this->assigned = $assigned;
+        $this->c_assigned = true;
+    }
     public function setTime($time) {
         $this->time = $time;
         $this->c_time = true;
@@ -78,34 +96,51 @@ class Project {
     public function getID() {
         return $this->ID;
     }
+    public function getParent() {
+        if ($this->parent == null) {
+            $this->parent = $this->dbSelect('parent', Task::$tableName);
+        }
+        return $this->parent;
+    }
     public function getOwner() {
         if ($this->owner == null) {
-            $this->owner = $this->dbSelect('owner', Project::$tableName);
+            $this->owner = $this->dbSelect('owner', Task::$tableName);
         }
         return $this->owner;
     }
+    public function getProject() {
+        if ($this->project == null) {
+            $this->project = $this->dbSelect('project', Task::$tableName);
+        }
+        return $this->project;
+    }
     public function getName() {
-        
         if ($this->name == null) {
-            $this->name = $this->dbSelect('name', Project::$tableName);
+            $this->name = $this->dbSelect('name', Task::$tableName);
         }
         return $this->name;
     }
     public function getDescription() {
         if ($this->description == null) {
-            $this->description = $this->dbSelect('description', Project::$tableName);
+            $this->description = $this->dbSelect('description', Task::$tableName);
         }
         return $this->description;
     }
+    public function getAssigned() {
+        if ($this->assigned == null) {
+            $this->assigned = $this->dbSelect('assigned', Task::$tableName);
+        }
+        return $this->assigned;
+    }
     public function getDeadline() {
         if ($this->deadline == null) {
-            $this->deadline = $this->dbSelect('deadline', Project::$tableName);
+            $this->deadline = $this->dbSelect('deadline', Task::$tableName);
         }
         return $this->hash;
     }
     public function getTime() {
         if ($this->time == null) {
-            $this->time = $this->dbSelect('time', Project::$tableName);
+            $this->time = $this->dbSelect('time', Task::$tableName);
         }
         return $this->time;
     }
@@ -134,15 +169,15 @@ class Project {
     /**
      * inserts a new feed into the database
      */
-    protected function insertProject($ID, $owner, $name, $description, $deadline, $time) {
-        $query = $GLOBALS['currentConnection']->prepare('INSERT INTO ' . Project::$tableName . ' VALUES (:ID, :owner, :name, :description, :deadline, :time)');
-        return ($query->execute(array(':ID' => $ID, ':owner' => $owner, ':name' => $name, ':description' => $description, ':deadline' => $deadline, ':time' => $time)));
+    protected function insertTask($ID, $parent, $project, $owner, $name, $description, $deadline, $assigned, $time) {
+        $query = $GLOBALS['currentConnection']->prepare('INSERT INTO ' . Task::$tableName . ' VALUES (:ID, :parent, :owner, :project, :name, :description, :deadline, :assigned, :time)');
+        return ($query->execute(array(':ID' => $ID, ':parent' => $parent,  ':owner' => $owner, ':project' => $project, ':name' => $name, ':description' => $description, ':deadline' => $deadline, ':assigned' => $assigned, ':time' => $time)));
     }
     
     /**
      * select n items from the database for a post (required for some static functions)
      */
-    public static function selectFromProject($what, $col, $arg, $where) {
+    public static function selectFromTask($what, $col, $arg, $where) {
         connect();
         $query = $GLOBALS['currentConnection']->prepare('SELECT ' . $what . ' FROM ' . $where . ' WHERE ' . $col . ' = :data');
         $query->execute(array(':data' => $arg));
@@ -158,29 +193,44 @@ class Project {
      * flushes changed members to the database. called on object destruction
      */
     public function flush() {
+        if ($this->c_parent) {
+            if ($this->update('parent', $this->parent, Task::$tableName)) {
+                $this->c_parent = false;
+            }
+        }
         if ($this->c_owner) {
-            if ($this->update('owner', $this->owner, Project::$tableName)) {
+            if ($this->update('owner', $this->owner, Task::$tableName)) {
                 $this->c_owner = false;
             }
         }
+        if ($this->c_project) {
+            if ($this->update('project', $this->project, Task::$tableName)) {
+                $this->c_project = false;
+            }
+        }
         if ($this->c_name) {
-            if ($this->update('name', $this->name, Project::$tableName)) {
+            if ($this->update('name', $this->name, Task::$tableName)) {
                 $this->c_name = false;
             }
         }
         if ($this->c_description) {
-            if ($this->update('description', $this->description, Project::$tableName)) {
+            if ($this->update('description', $this->description, Task::$tableName)) {
                 $this->c_description = false;
             }
         }
         
         if ($this->c_deadline) {
-            if ($this->update('deadline', $this->deadline, Project::$tableName)) {
+            if ($this->update('deadline', $this->deadline, Task::$tableName)) {
                 $this->c_deadline = false;
             }
         }
+        if ($this->c_assigned) {
+            if ($this->update('assigned', $this->assigned, Task::$tableName)) {
+                $this->c_assigned = false;
+            }
+        }
         if ($this->c_time) {
-            if ($this->update('time', $this->time, Project::$tableName)) {
+            if ($this->update('time', $this->time, Task::$tableName)) {
                 $this->c_time = false;
             }
         }
@@ -197,7 +247,7 @@ class Project {
             $ID = md5($time . $user . $seed . $loop);
             $ID = 'P' . substr($ID, 1, strlen($ID));
             
-            if (!Project::projectExistsId($ID)) {
+            if (!Task::taskExistsId($ID)) {
                 return $ID;
             }
         }
@@ -206,10 +256,10 @@ class Project {
     //=-=-=-=-=-=-=-=-=-=-=-=  Static Functions  =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-//
     
     /**
-     * checks if  project exists
+     * checks if  task exists
      */
-    public static function projectExistsId($ID) {
-        $results = Project::selectFromProject('ID', 'ID', $ID, Project::$tableName);
+    public static function taskExistsId($ID) {
+        $results = Task::selectFromTask('ID', 'ID', $ID, Task::$tableName);
         if (isset($results['ID']) && $results['ID'] == $ID) {
             return true;
         } else {
@@ -218,12 +268,12 @@ class Project {
     }
     
     
-    public static function createProject($owner, $name, $description, $deadline) {
+    public static function createTask($owner, $parent, $project, $name, $description, $assigned, $deadline) {
         
-        if (isset($owner) && (isset($name) && (strlen($name) < Project::$maxNameLen)) && (isset($description) && (strlen($description) < Project::$maxDescriptionLen)) && isset($deadline)) {
-            $ID = Project::genID($name, $owner);
+        if (isset($owner) && isset($project) && (isset($name) && (strlen($name) < Task::$maxNameLen)) && (isset($description) && (strlen($description) < Task::$maxDescriptionLen)) && isset($deadline)) {
+            $ID = Task::genID($name, $owner);
             $time = time();
-            return Project::insertProject($ID, $owner, $name, $description, $deadline, $time);
+            return Task::insertTask($ID, $parent, $project, $owner, $name, $description, $deadline, $assigned, $time);
             
         }
         return false;

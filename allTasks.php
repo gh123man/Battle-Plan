@@ -12,17 +12,19 @@ include_once "./utils/helpers.php";
 include_once "./objects/Task.php";
 include_once "./objects/Project.php";
 include_once "./pageElements/tasks.php";
-if (isset($_GET['ID']) && Task::taskExistsId($_GET['ID'])) {
+include_once "./pageElements/projects.php";
+
+if (isset($_SESSION['project'])) {
+
+    $project = new Project($_SESSION['project']);
     
-    $task = new Task($_GET['ID']);
-    $project = new Project($task->getProject());
     if ($_SESSION['account']->getID() != $project->getOwner()) {
-        taskNotExist();
+        projectNotExist();
         return;
     }
-    varJS("ID", $task->getID());
+    
 } else {
-    taskNotExist();
+    projectNotExist();
     return;
 }
 
@@ -36,21 +38,10 @@ if (isset($_GET['ID']) && Task::taskExistsId($_GET['ID'])) {
     </a>
 </div>
 
-
-<div class="navigatonList">
-    <a href="/allTasks.php">
-    <?php echo $project->getName();?>
-    </a>
-    <?php drawNavigaiton($task->getID()); ?>
-</div>
-
-
+All Tasks
 <?php
 
-showTaskNode($task);
-createTaskWindow();
-
-
+listSubTaskNodes(null, $project->getID());
 
 ?>
 

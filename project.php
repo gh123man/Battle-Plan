@@ -9,7 +9,9 @@ include_once "./pageElements/headder.php";
 
 <?php
 include_once "./objects/Project.php";
+include_once "./objects/Task.php";
 include_once "./pageElements/projects.php";
+include_once "./pageElements/tasks.php";
 if (isset($_GET['ID']) && Project::projectExistsId($_GET['ID'])) {
     
     $project = new Project($_GET['ID']);
@@ -17,6 +19,7 @@ if (isset($_GET['ID']) && Project::projectExistsId($_GET['ID'])) {
         projectNotExist();
         return;
     }
+    $_SESSION['project'] = $project->getID();
     
 } else {
     projectNotExist();
@@ -40,9 +43,13 @@ if (isset($_GET['ID']) && Project::projectExistsId($_GET['ID'])) {
                     <a href="/">Tasks</a>
                 </span>
             </div>
+            <div  class="newTaskButtonBox">
+                <button class="genericButton" id="newTaskButton" type="button">+ new Task</button>
+            </div>
         </div>
-        
-        
+        <div class="fitTasks">
+        <?php listTasks(); ?>
+        </div>
     </div>
 </div>
 
@@ -69,7 +76,7 @@ if (isset($_GET['ID']) && Project::projectExistsId($_GET['ID'])) {
     </div>
 </div>
 
-
+<?php createTaskWindow();?>
 
 
 </div>

@@ -30,8 +30,14 @@ function requestTask(item) {
     var tName = encodeURIComponent(item.tName.value);
     var description = encodeURIComponent(item.description.value);
     var deadline = encodeURIComponent(item.deadline.value);
+    
+    if (typeof ID == 'undefined') {
 
-    var send = "name=" + tName + "&description=" + description + "&deadline=" + deadline + "&parent=" + ID;
+        var send = "name=" + tName + "&description=" + description + "&deadline=" + deadline;
+    
+    } else {
+        var send = "name=" + tName + "&description=" + description + "&deadline=" + deadline + "&parent=" + ID;
+    }
 
     $.ajax({
         url: "/ajax/createTask.php",

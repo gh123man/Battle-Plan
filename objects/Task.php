@@ -29,12 +29,13 @@ class Task {
     private $description;   private $c_description;
     private $deadline;      private $c_deadline;
     private $assigned;      private $c_assigned;
+    private $finished;      private $c_finished;
     private $time;          private $c_time;
     
     
     //=-=-=-=-=-=-=-=-=-=-=-=  Constructors  -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     
-    public function __construct($ID, $parent = null, $owner = null, $project = null, $name = null, $description = null, $deadline = null, $assigned = null, $time = null) {
+    public function __construct($ID, $parent = null, $owner = null, $project = null, $name = null, $description = null, $deadline = null, $assigned = null, $finished = null, $time = null) {
         $this->ID = $ID;
         $this->parent = $parent;            $this->c_parent = false;
         $this->owner = $owner;              $this->c_owner = false;
@@ -43,6 +44,7 @@ class Task {
         $this->description = $description;  $this->c_description = false;
         $this->deadline = $deadline;        $this->c_deadline = false;
         $this->assigned = $assigned;        $this->c_assigned = false;
+        $this->finished = $finished;        $this->c_finished = false;
         $this->time = $time;                $this->c_time = false;
         
     }
@@ -68,7 +70,7 @@ class Task {
         $this->project = $project;
         $this->c_project = true;
     }
-    public function setName($hash) {
+    public function setName($name) {
         $this->name = $name;
         $this->c_name = true;
     }
@@ -76,13 +78,17 @@ class Task {
         $this->setdescription = $setdescription;
         $this->c_setdescription = true;
     }
-    public function setDeadline($salt) {
+    public function setDeadline($deadline) {
         $this->deadline = $deadline;
         $this->c_deadline = true;
     }
     public function setAssigned($assigned) {
         $this->assigned = $assigned;
         $this->c_assigned = true;
+    }
+    public function setFinished($finished) {
+        $this->finished = $finished;
+        $this->c_finished = true;
     }
     public function setTime($time) {
         $this->time = $time;
@@ -136,7 +142,13 @@ class Task {
         if ($this->deadline == null) {
             $this->deadline = $this->dbSelect('deadline', Task::$tableName);
         }
-        return $this->hash;
+        return $this->deadline;
+    }
+    public function getFinished() {
+        if ($this->finished == null) {
+            $this->finished = $this->dbSelect('finished', Task::$tableName);
+        }
+        return $this->finished;
     }
     public function getTime() {
         if ($this->time == null) {
@@ -169,9 +181,9 @@ class Task {
     /**
      * inserts a new feed into the database
      */
-    protected function insertTask($ID, $parent, $project, $owner, $name, $description, $deadline, $assigned, $time) {
-        $query = $GLOBALS['currentConnection']->prepare('INSERT INTO ' . Task::$tableName . ' VALUES (:ID, :parent, :owner, :project, :name, :description, :deadline, :assigned, :time)');
-        return ($query->execute(array(':ID' => $ID, ':parent' => $parent,  ':owner' => $owner, ':project' => $project, ':name' => $name, ':description' => $description, ':deadline' => $deadline, ':assigned' => $assigned, ':time' => $time)));
+    protected function insertTask($ID, $parent, $project, $owner, $name, $description, $deadline, $assigned, $finished, $time) {
+        $query = $GLOBALS['currentConnection']->prepare('INSERT INTO ' . Task::$tableName . ' VALUES (:ID, :parent, :owner, :project, :name, :description, :deadline, :assigned, :finished, :time)');
+        return ($query->execute(array(':ID' => $ID, ':parent' => $parent,  ':owner' => $owner, ':project' => $project, ':name' => $name, ':description' => $description, ':deadline' => $deadline, ':assigned' => $assigned, ":finished" => $finished, ':time' => $time)));
     }
     
     /**
@@ -229,6 +241,11 @@ class Task {
                 $this->c_assigned = false;
             }
         }
+        if ($this->c_finished) {
+            if ($this->update('finished', $this->finished, Task::$tableName)) {
+                $this->c_finished = false;
+            }
+        }
         if ($this->c_time) {
             if ($this->update('time', $this->time, Task::$tableName)) {
                 $this->c_time = false;
@@ -245,7 +262,7 @@ class Task {
             $time = time();
             $loop++;
             $ID = md5($time . $user . $seed . $loop);
-            $ID = 'P' . substr($ID, 1, strlen($ID));
+            $ID = 'T' . substr($ID, 1, strlen($ID));
             
             if (!Task::taskExistsId($ID)) {
                 return $ID;
@@ -273,7 +290,7 @@ class Task {
         if (isset($owner) && isset($project) && (isset($name) && (strlen($name) < Task::$maxNameLen)) && (isset($description) && (strlen($description) < Task::$maxDescriptionLen)) && isset($deadline)) {
             $ID = Task::genID($name, $owner);
             $time = time();
-            return Task::insertTask($ID, $parent, $project, $owner, $name, $description, $deadline, $assigned, $time);
+            return Task::insertTask($ID, $parent, $project, $owner, $name, $description, $deadline, $assigned, 0, $time);
             
         }
         return false;
@@ -282,9 +299,66 @@ class Task {
     
     //=-=-=-=-=-=-=-=-=-=-=-=  Member Functions  =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-//
     
+    public function childrenCount() {
+        $query = $GLOBALS['currentConnection']->prepare('SELECT count(*) FROM Tasks where parent = "' . $this->getID() . '"');
+        
+        $query->execute();
+        $query->setFetchMode(PDO::FETCH_ASSOC); 
+        
+        $result = $query->fetch();
+        
+            
+        if (isset($result['count(*)']) && $result['count(*)'] > 0) {
+            return $result['count(*)'];
+        }
+        return 0;
+    }
+    
+    public function hasChildren() {
+        return ($this->childrenCount() > 0);
+    }
     
     
+    public function getStatus() {
     
+        //get children
+        //for each child, get score
+        //avg scores
+        //return val
+        
+        if ($this->hasChildren()) {
+        
+            $query = $GLOBALS['currentConnection']->prepare('SELECT ID FROM Tasks where parent = "' . $this->getID() . '"');
+            
+            $query->execute();
+            $query->setFetchMode(PDO::FETCH_ASSOC); 
+            
+            $count = 0;
+            $sum = 0;
+            
+            while($result = $query->fetch()) {
+                $sub = new Task($result['ID']);
+                $sum += $sub->getStatus();
+                $count ++;
+            }
+            
+            return intval($sum / $count);
+        
+        } else {
+        
+            if ($this->getFinished() == 1) {
+                return 100;
+            } 
+            return 0;
+            
+        }
     
+       
+    }
     
 }
+
+
+
+
+

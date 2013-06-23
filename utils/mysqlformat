@@ -33,6 +33,7 @@ create table Tasks(
     description varchar(200) NOT NULL,
     deadline char(10) NOT NULL,
     assigned char(10),
+    finished int unsigned NOT NULL,
     time int unsigned NOT NULL,
     
     PRIMARY KEY (ID),

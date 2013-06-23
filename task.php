@@ -28,6 +28,7 @@ if (isset($_GET['ID']) && Task::taskExistsId($_GET['ID'])) {
 
 ?>
 
+
 <div class="projectTitle">
      <a href="/project?ID=<?php echo $project->getID();?>">
     <span>

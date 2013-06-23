@@ -84,29 +84,65 @@ function showTaskNode($task) {
                         <a href="/task.php?ID=<?php echo $task->getID() ?>"><?php echo $task->getName(); ?></a>
                     </span>
                 </div>
-                
+                <?php if ($task->getFinished() == 0) {?>
                 <div class="newTaskButtonBox">
                     <button class="genericButton" id="newTaskButton" type="button">+ new Task</button>
                 </div>
+                <?php } ?>
                 
             </div>
             
-            <div class="description">
-                <span>
-                    <?php echo $task->getDescription(); ?>
-                </span>
+            <div class="statusArea">
+                <div class="description">
+                    <span>
+                        <?php echo $task->getDescription(); ?>
+                    </span>
+                </div>
+                
+                <div class="progressArea">
+                    <style type="text/css">
+                        #<?php echo $task->getID(); ?> {
+                            width: <?php echo $task->getStatus() . "%"; ?>;
+                        }
+                    </style>
+                    <div class="progressBackground">
+                        <div ID="<?php echo $task->getID(); ?>" class="statusBar">
+                            &nbsp;<?php echo $task->getStatus() . "%"; ?>
+                        </div>
+                    </div>
+                    
+                    <style type="text/css">
+                        #d<?php echo $task->getID(); ?> {
+                            width: <?php echo $task->getStatus() . "%"; ?>;
+                        }
+                    </style>
+                    <div class="progressBackground">
+                        <div ID="d<?php echo $task->getID(); ?>" class="statusBarDeadline">
+                            &nbsp;<?php echo $task->getStatus() . "%"; ?>
+                        </div>
+                    </div>
+                
+                </div>
             </div>
+             
             
+            <?php if ($task->hasChildren()) {?>
             <div class="subTitle">
                 Sub-Tasks:
             </div>
-            
             <div class="subTasks">
                 <?php
                 listSubTaskNodes($task->getID(), $task->getProject());
                 ?>
             </div>
+            <?php } ?>
             
+             <?php 
+             if (!$task->hasChildren()) {
+                showFinishButton();
+             }
+             
+              ?>
         </div>
     </div>
 
@@ -123,7 +159,7 @@ function showSubTaskNode($ID) {
             <div class="titleBar barHead">
                 <div  class="panelTitle">
                     <span>
-                        <a href="/task?ID=<?php echo $task->getID() ?>"><?php echo $task->getName(); ?></a>
+                        <a href="/task.php?ID=<?php echo $task->getID() ?>"><?php echo $task->getName(); ?></a>
                     </span>
                 </div>
                 
@@ -135,9 +171,45 @@ function showSubTaskNode($ID) {
                 </span>
             </div>
             
+            <div class="SubProgressArea">
+                <style type="text/css">
+                    #<?php echo $task->getID(); ?> {
+                        width: <?php echo $task->getStatus() . "%"; ?>;
+                    }
+                </style>
+                <div class="progressBackground">
+                    <div ID="<?php echo $task->getID();?>" class="statusBar">
+                        &nbsp;<?php echo $task->getStatus() . "%"; ?>
+                    </div>
+                </div>
+                
+                
+                <style type="text/css">
+                    #d<?php echo $task->getID(); ?> {
+                        width: <?php echo $task->getStatus() . "%"; ?>;
+                    }
+                </style>
+                <div class="progressBackground">
+                    <div ID="d<?php echo $task->getID(); ?>" class="statusBarDeadline">
+                        &nbsp;<?php echo $task->getStatus() . "%"; ?>
+                    </div>
+                </div>
+                    
+                    
+            </div>
+            
         </div>
     </div>
     
+    <?
+}
+
+function showFinishButton() {
+    ?>
+    <script type="text/javascript" src="/static/js/closeTask.js"></script>
+    <div class="finishButton">
+        <button class="genericButton" id="closeTaskButton" type="button">Mark Finished</button>
+    </div>
     <?
 }
 

@@ -46,6 +46,8 @@
     border: solid 1px #ccc;
     border-radius: 3px;
     background: #f6f6f6;
+    overflow: hidden;
+    margin-bottom: 8px;
 }
 
 .panelTitle a{font-family:sans-serif; text-decoration:none; color:#ddd;}

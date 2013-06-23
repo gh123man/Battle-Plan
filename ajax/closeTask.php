@@ -21,6 +21,14 @@ if (isset($_POST['close']) && isset($_POST['ID']) &&  $_POST['close'] == "true")
         $task->setFinished(1);
         $status = true;
     }
+} else if (isset($_POST['open']) && isset($_POST['ID']) &&  $_POST['open'] == "true") {
+    
+    $task = new Task($_POST['ID']);
+    
+    if ($task->getOwner() == $_SESSION['account']->getID()) { //change this for members later
+        $task->setFinished(0);
+        $status = true;
+    }
 } else {
     $status = false;
 }

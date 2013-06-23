@@ -14,9 +14,9 @@ include_once "./objects/Project.php";
 include_once "./pageElements/tasks.php";
 include_once "./pageElements/projects.php";
 
-if (isset($_SESSION['project'])) {
+if (isset($_GET['ID']) && Project::projectExistsId($_GET['ID'])) {
 
-    $project = new Project($_SESSION['project']);
+    $project = new Project($_GET['ID']);
     
     if ($_SESSION['account']->getID() != $project->getOwner()) {
         projectNotExist();

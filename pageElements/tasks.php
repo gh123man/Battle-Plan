@@ -113,12 +113,12 @@ function showTaskNode($task) {
                     
                     <style type="text/css">
                         #d<?php echo $task->getID(); ?> {
-                            width: <?php echo $task->getStatus() . "%"; ?>;
+                            width: <?php echo $task->getDeadlineDiff() . "%"; ?>;
                         }
                     </style>
                     <div class="progressBackground">
                         <div ID="d<?php echo $task->getID(); ?>" class="statusBarDeadline">
-                            &nbsp;<?php echo $task->getStatus() . "%"; ?>
+                            &nbsp;<?php echo $task->getDeadlineDiff() . "%"; ?>
                         </div>
                     </div>
                 
@@ -127,9 +127,7 @@ function showTaskNode($task) {
              
             
             <?php if ($task->hasChildren()) {?>
-            <div class="subTitle">
-                Sub-Tasks:
-            </div>
+            
             <div class="subTasks">
                 <?php
                 listSubTaskNodes($task->getID(), $task->getProject());
@@ -139,7 +137,7 @@ function showTaskNode($task) {
             
              <?php 
              if (!$task->hasChildren()) {
-                showFinishButton();
+                showFinishButton($task);
              }
              
               ?>
@@ -186,12 +184,12 @@ function showSubTaskNode($ID) {
                 
                 <style type="text/css">
                     #d<?php echo $task->getID(); ?> {
-                        width: <?php echo $task->getStatus() . "%"; ?>;
+                        width: <?php echo $task->getDeadlineDiff() . "%"; ?>;
                     }
                 </style>
                 <div class="progressBackground">
                     <div ID="d<?php echo $task->getID(); ?>" class="statusBarDeadline">
-                        &nbsp;<?php echo $task->getStatus() . "%"; ?>
+                        &nbsp;<?php echo $task->getDeadlineDiff() . "%"; ?>
                     </div>
                 </div>
                     
@@ -204,13 +202,23 @@ function showSubTaskNode($ID) {
     <?
 }
 
-function showFinishButton() {
+function showFinishButton($task) {
+
+    if ($task->getFinished() == 0) {
     ?>
     <script type="text/javascript" src="/static/js/closeTask.js"></script>
     <div class="finishButton">
         <button class="genericButton" id="closeTaskButton" type="button">Mark Finished</button>
     </div>
     <?
+    } else {
+    ?>
+    <script type="text/javascript" src="/static/js/closeTask.js"></script>
+    <div class="finishButton">
+        <button class="genericButton" id="openTaskButton" type="button">re-Open Task</button>
+    </div>
+    <?
+    }
 }
 
 

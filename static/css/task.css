@@ -51,6 +51,7 @@
     border-radius: 3px;
     text-shadow: 1px 1px 8px #000;
     color: #fff;
+    box-shadow: inset 1px 1px 3px #000;
 }
 
 .statusBarDeadline {
@@ -60,12 +61,14 @@
     border-radius: 3px;
     text-shadow: 1px 1px 8px #000;
     color: #fff;
+    box-shadow: inset 1px 1px 3px #000;
 }
 
 .progressBackground {
     background: #aaa;
     width:100%;
     border-radius: 3px;
+    box-shadow: inset 1px 1px 3px #000;
 }
 
 .description {
@@ -82,7 +85,6 @@
 }
 
 .progressArea {
-    border:solid 1px;
     width: 310px;
     height: 80px;
     float: right;
@@ -91,16 +93,9 @@
 }
 
 .SubProgressArea {
-    border:solid 1px;
     width: 230px;
     height: 80px;
     float: right;
     padding: 5px;
     margin: 5px;
-}
-
-
-.subTitle {
-    margin-left: 5px;
-    margin-top: 20px;
 }

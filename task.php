@@ -39,7 +39,7 @@ if (isset($_GET['ID']) && Task::taskExistsId($_GET['ID'])) {
 
 
 <div class="navigatonList">
-    <a href="/allTasks.php">
+    <a href="/allTasks.php?ID=<?php echo $project->getID();?>">
     <?php echo $project->getName();?>
     </a>
     <?php drawNavigaiton($task->getID()); ?>

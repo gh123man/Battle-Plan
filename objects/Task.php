@@ -352,7 +352,20 @@ class Task {
             return 0;
             
         }
+       
+    }
     
+    public function getDeadlineDiff() {
+        
+        if ($this->getDeadline() != 0) {
+            
+            $diff = (($this->getDeadline() / $this->getTime()) *100);
+        
+        } else {
+        
+            return 0;
+            
+        }
        
     }
     

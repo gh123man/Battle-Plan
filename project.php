@@ -40,7 +40,7 @@ if (isset($_GET['ID']) && Project::projectExistsId($_GET['ID'])) {
         <div class="titleBar barHead">
             <div  class="panelTitle">
                 <span>
-                    <a href="/allTasks.php">Tasks</a>
+                    <a href="/allTasks.php?ID=<?php echo $project->getID();?>">Tasks</a>
                 </span>
             </div>
             <div  class="newTaskButtonBox">

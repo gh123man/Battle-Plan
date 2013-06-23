@@ -16,8 +16,8 @@ if (isset($_POST['name']) && strlen($_POST['name']) > 0 && isset($_POST['descrip
     if (!isset($_POST['parent'])) {
         $_POST['parent'] = null;
     }
-
-    $status = Task::createTask($_SESSION['account']->getID(), $_POST['parent'], $_SESSION['project'], $_POST['name'], $_POST['description'], null, $_POST['deadline']);
+    $stamp = strtotime($_POST['deadline']);
+    $status = Task::createTask($_SESSION['account']->getID(), $_POST['parent'], $_SESSION['project'], $_POST['name'], $_POST['description'], null, $stamp);
 
 } else {
     $status = false;

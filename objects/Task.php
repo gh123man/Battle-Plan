@@ -358,9 +358,17 @@ class Task {
     public function getDeadlineDiff() {
         
         if ($this->getDeadline() != 0) {
-            
-            $diff = (($this->getDeadline() / $this->getTime()) *100);
         
+
+            $total_secs = ($this->getDeadline()) - ($this->getTime());
+
+            $elapsed_secs = time() - ($this->getTime());
+
+            $diff = round(($elapsed_secs/$total_secs)*100);
+            
+            
+            return intval($diff);
+            
         } else {
         
             return 0;

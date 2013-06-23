@@ -24,7 +24,10 @@ jQuery(function($){
   
 });
   
-  
+$(function() {
+    $( "#deadline" ).datepicker();
+});
+
 function requestTask(item) {
 
     var tName = encodeURIComponent(item.tName.value);

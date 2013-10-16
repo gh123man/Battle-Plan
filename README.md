@@ -8,7 +8,7 @@ This was a quick weekend project to test an idea of a nested project manager. Tu
 Setup Guide
 ------------
 Note: This should plug-and-play with a LAMP setup, but this hasn't been
-tested yet (get on it, Nate).
+tested yet.
 
 
 Manual Setup (Ubuntu)

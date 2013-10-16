@@ -1,4 +1,7 @@
 <?php
+/** 
+ * @author Brian Floersch <gh123man@gmail.com>
+ */
 ?>
 
 <script type="text/javascript" src="/static/jquery/jquery.js"></script>

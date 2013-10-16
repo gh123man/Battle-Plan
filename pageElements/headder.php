@@ -1,4 +1,7 @@
 <?php
+/** 
+ * @author Brian Floersch <gh123man@gmail.com>
+ */
 include_once "./utils/sql_util.php";
 include_once "./objects/Account.php";
 session_start();

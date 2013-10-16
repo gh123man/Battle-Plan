@@ -1,5 +1,7 @@
 <?php
-
+/** 
+ * @author Brian Floersch <gh123man@gmail.com>
+ */
 include_once "./pageElements/headder.php";
 include_once "./utils/helpers.php";
 ?>

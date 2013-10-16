@@ -1,5 +1,7 @@
 <?php
-
+/** 
+ * @author Brian Floersch <gh123man@gmail.com>
+ */
 function listTasks() {
     $query = $GLOBALS['currentConnection']->prepare('SELECT * FROM Tasks where owner = "' . $_SESSION['account']->getID() . '" and project = "' . $_SESSION['project'] . '" and parent is null order by time asc');
     $query->execute();

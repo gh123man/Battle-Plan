@@ -1,5 +1,7 @@
 <?php
-
+/** 
+ * @author Brian Floersch <gh123man@gmail.com>
+ */
 function listMyProjects() {
     
     $query = $GLOBALS['currentConnection']->prepare('SELECT * FROM Projects where owner = ' . $_SESSION['account']->getID());

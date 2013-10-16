@@ -1,5 +1,7 @@
 <?php
-
+/** 
+ * @author Brian Floersch <gh123man@gmail.com>
+ */
 include_once "./pageElements/headder.php";
 ?>
 <LINK href="/static/css/pageContent.css" rel="stylesheet" type="text/css">
